@@ -20,21 +20,27 @@ const isPerfect = (num) => {
 
 // Function to check if a number is Armstrong
 const isArmstrong = (num) => {
+    num = Math.abs(num); // Take absolute value
     let sum = 0;
     let digits = num.toString().split(""), power = digits.length;
     digits.forEach(d => sum += Math.pow(parseInt(d), power));
     return sum === num;
 };
 
+
 // Function to get sum of digits
 const getDigitSum = (num) => {
-    return num.toString().split("").reduce((sum, digit) => sum + parseInt(digit), 0);
+    const isNegative = num < 0; // Check if the original number is negative
+    num = Math.abs(num); // Take absolute value
+    let sum = num.toString().split("").reduce((sum, digit) => sum + parseInt(digit), 0);
+    return isNegative ? -sum : sum; // Append minus sign if original number was negative
 };
+
 
 // Controller function
 export const classifyNumber = async (req, res) => {
     const { number } = req.query;
-    const num = parseInt(number);
+    const num = Number(number);
 
     if (isNaN(num)) {
         return res.status(400).json({ number, error: true });
@@ -57,6 +63,8 @@ export const classifyNumber = async (req, res) => {
             digit_sum: getDigitSum(num),
             fun_fact: factResponse.data
         });
+
+
     } catch (error) {
         res.json({
             number: num,
@@ -68,3 +76,5 @@ export const classifyNumber = async (req, res) => {
         });
     }
 };
+
+
